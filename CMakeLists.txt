@@ -35,7 +35,17 @@ ELSE()
 	set(MSVC_LINK_FLAGS " /RELEASE /LTCG /INCREMENTAL:NO /NOLOGO")
 ENDIF()
 
+set(MYSQLPP_VERSION_MAJOR 3)
+set(MYSQLPP_VERSION_MINOR 2)
+set(MYSQLPP_VERSION_BUGFIX 3)
+
+configure_file(
+  lib/mysql++.h.in
+  ${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
+)
+
 #todo: check to make sure we want to do this
+if (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
 foreach(flag_var
         CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
         CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
@@ -43,84 +53,89 @@ foreach(flag_var
       string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
    endif(${flag_var} MATCHES "/MD")
 endforeach(flag_var)
+endif (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
 
 ENDIF()
 
 SET( SOURCES_BASE
-src/beemutex.cpp
-src/cmdline.cpp
-src/connection.cpp
-src/cpool.cpp
-src/datetime.cpp
-src/dbdriver.cpp
-src/field_names.cpp
-src/field_types.cpp
-src/manip.cpp
-src/myset.cpp
-src/mysql++.cpp
-src/mystring.cpp
-src/null.cpp
-src/options.cpp
-src/qparms.cpp
-src/query.cpp
-src/result.cpp
-src/row.cpp
-src/scopedconnection.cpp
-src/sql_buffer.cpp
-src/sqlstream.cpp
-src/ssqls2.cpp
-src/stadapter.cpp
-src/tcp_connection.cpp
-src/transaction.cpp
-src/type_info.cpp
-src/uds_connection.cpp
-src/utility.cpp
-src/vallist.cpp
-src/wnp_connection.cpp
-
-src/autoflag.h
-src/beemutex.h
-src/cmdline.h
-src/common.h
-src/comparable.h
-src/connection.h
-src/cpool.h
-src/datetime.h
-src/dbdriver.h
-src/exceptions.h
-src/field.h
-src/field_names.h
-src/field_types.h
-src/insertpolicy.h
-src/manip.h
-src/myset.h
-src/mystring.h
-src/noexceptions.h
-src/null.h
-src/options.h
-src/qparms.h
-src/querydef.h
-src/query.h
-src/refcounted.h
-src/result.h
-src/row.h
-src/scopedconnection.h
-src/sql_buffer.h
-src/sqlstream.h
-src/sql_types.h
-src/ssqls2.h
-src/ssqls.h
-src/stadapter.h
-src/stream2string.h
-src/tcp_connection.h
-src/tiny_int.h
-src/transaction.h
-src/type_info.h
-src/uds_connection.h
-src/utility.h
-src/vallist.h
-src/wnp_connection.h
-src/mysql++.h
+lib/beemutex.cpp
+lib/cmdline.cpp
+lib/connection.cpp
+lib/cpool.cpp
+lib/datetime.cpp
+lib/dbdriver.cpp
+lib/field_names.cpp
+lib/field_types.cpp
+lib/manip.cpp
+lib/myset.cpp
+lib/mysql++.cpp
+lib/mystring.cpp
+lib/null.cpp
+lib/options.cpp
+lib/qparms.cpp
+lib/query.cpp
+lib/result.cpp
+lib/row.cpp
+lib/scopedconnection.cpp
+lib/sql_buffer.cpp
+lib/sqlstream.cpp
+lib/ssqls2.cpp
+lib/stadapter.cpp
+lib/tcp_connection.cpp
+lib/transaction.cpp
+lib/type_info.cpp
+lib/uds_connection.cpp
+lib/utility.cpp
+lib/vallist.cpp
+lib/wnp_connection.cpp
+lib/autoflag.h
+lib/beemutex.h
+lib/cmdline.h
+lib/common.h
+lib/comparable.h
+lib/connection.h
+lib/cpool.h
+lib/datetime.h
+lib/dbdriver.h
+lib/exceptions.h
+lib/field.h
+lib/field_names.h
+lib/field_types.h
+lib/insertpolicy.h
+lib/manip.h
+lib/myset.h
+lib/mystring.h
+lib/noexceptions.h
+lib/null.h
+lib/options.h
+lib/qparms.h
+lib/querydef.h
+lib/query.h
+lib/refcounted.h
+lib/result.h
+lib/row.h
+lib/scopedconnection.h
+lib/sql_buffer.h
+lib/sqlstream.h
+lib/sql_types.h
+lib/ssqls2.h
+lib/ssqls.h
+lib/stadapter.h
+lib/stream2string.h
+lib/tcp_connection.h
+lib/tiny_int.h
+lib/transaction.h
+lib/type_info.h
+lib/uds_connection.h
+lib/utility.h
+lib/vallist.h
+lib/wnp_connection.h
+lib/mysql++.h
 )
+
+if (MSVC AND mysqlpp_STATIC_LIB)
+add_library(mysqlpp STATIC ${SOURCES_BASE})
+else()
 #todo add a way to compile as shared lib
 add_library(mysqlpp STATIC ${SOURCES_BASE})
+endif()
