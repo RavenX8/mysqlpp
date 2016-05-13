@@ -10,52 +10,49 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+if (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
+	foreach(flag_var
+			CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+			CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+		if(${flag_var} MATCHES "/MD")
+			string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+		endif(${flag_var} MATCHES "/MD")
+	endforeach(flag_var)
+endif (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
+
 SET(PROJECT "mysqlpp")
 project(${PROJECT})
 
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
-IF (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-
+IF (MSVC)
 	add_definitions(-D_USRDLL)
 	add_definitions(-DMYSQLPP_MAKING_DLL)
 	add_definitions(-DHAVE_MYSQL_SSL_SET)
 	
-IF($(CMAKE_BUILD_TYPE) STREQUAL DEBUG)
-	add_definitions(-D_DEBUG)
-	add_definitions(-D_WIN32)
-	
-	set(CMAKE_CXX_FLAGS " /Od /EHsc /Zi /GR /nologo /RTC1")
-	set(MSVC_LINK_FLAGS " /DEBUG /INCREMENTAL")
-ELSE()
-    add_definitions(-D_WIN32)
-    add_definitions(-DHAVE_MYSQL_SSL_SET)
-	
-	set(CMAKE_CXX_FLAGS " /Ox /EHsc /GL /GR /nologo")
-	set(MSVC_LINK_FLAGS " /RELEASE /LTCG /INCREMENTAL:NO /NOLOGO")
+	IF($(CMAKE_BUILD_TYPE) STREQUAL DEBUG)
+		add_definitions(-D_DEBUG)
+		add_definitions(-D_WIN32)
+		
+		set(CMAKE_CXX_FLAGS " /Od /EHsc /Zi /GR /nologo /RTC1")
+		set(MSVC_LINK_FLAGS " /DEBUG /INCREMENTAL")
+	ELSE()
+		add_definitions(-D_WIN32)
+		add_definitions(-DHAVE_MYSQL_SSL_SET)
+		
+		set(CMAKE_CXX_FLAGS " /Ox /EHsc /GL /GR /nologo")
+		set(MSVC_LINK_FLAGS " /RELEASE /LTCG /INCREMENTAL:NO /NOLOGO")
+	ENDIF()
 ENDIF()
 
 set(MYSQLPP_VERSION_MAJOR 3)
 set(MYSQLPP_VERSION_MINOR 2)
 set(MYSQLPP_VERSION_BUGFIX 3)
-
+	
 configure_file(
-  lib/mysql++.h.in
-  ${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
+	lib/mysql++.h.in
+	${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
 )
-
-#todo: check to make sure we want to do this
-if (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
-foreach(flag_var
-        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-   if(${flag_var} MATCHES "/MD")
-      string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-   endif(${flag_var} MATCHES "/MD")
-endforeach(flag_var)
-endif (MSVC AND mysqlpp_MSVC_STATIC_RUNTIME)
-
-ENDIF()
 
 SET( SOURCES_BASE
 lib/beemutex.cpp
@@ -133,9 +130,9 @@ lib/wnp_connection.h
 lib/mysql++.h
 )
 
-if (MSVC AND mysqlpp_STATIC_LIB)
-add_library(mysqlpp STATIC ${SOURCES_BASE})
+if (mysqlpp_STATIC_LIB)
+	add_library(mysqlpp STATIC ${SOURCES_BASE})
 else()
-#todo add a way to compile as shared lib
-add_library(mysqlpp STATIC ${SOURCES_BASE})
+	#todo add a way to compile as shared lib
+	add_library(mysqlpp STATIC ${SOURCES_BASE})
 endif()
