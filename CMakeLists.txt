@@ -26,6 +26,7 @@ project(${PROJECT})
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
 IF (MSVC)
+	MESSAGE("Building for Visual Stuido")
 	add_definitions(-D_USRDLL)
 	add_definitions(-DMYSQLPP_MAKING_DLL)
 	add_definitions(-DHAVE_MYSQL_SSL_SET)

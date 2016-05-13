@@ -102,7 +102,7 @@ STL_SLIST_EXTENSION
 
 
 # Include Bakefile macros
-AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
+#AC_BAKEFILE([m4_include(config/autoconf_inc.m4)])
 
 
 #
