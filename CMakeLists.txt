@@ -31,6 +31,7 @@ add_definitions(-DHAVE_MYSQL_SSL_SET)
 IF (MSVC)
 	MESSAGE("Building for Visual Stuido")
 	add_definitions(-D_WIN32)
+	add_definitions(-DMYSQLPP_MAKING_DLL)
 	
 	IF($(CMAKE_BUILD_TYPE) STREQUAL DEBUG)
 		add_definitions(-D_DEBUG)
