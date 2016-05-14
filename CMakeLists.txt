@@ -25,22 +25,21 @@ project(${PROJECT})
 
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
+add_definitions(-D_USRDLL)
+add_definitions(-DHAVE_MYSQL_SSL_SET)
+
 IF (MSVC)
 	MESSAGE("Building for Visual Stuido")
-	add_definitions(-D_USRDLL)
-	add_definitions(-DMYSQLPP_MAKING_DLL)
-	add_definitions(-DHAVE_MYSQL_SSL_SET)
+	add_definitions(-D_WIN32)
 	
 	IF($(CMAKE_BUILD_TYPE) STREQUAL DEBUG)
 		add_definitions(-D_DEBUG)
-		add_definitions(-D_WIN32)
 		
 		set(CMAKE_CXX_FLAGS " /Od /EHsc /Zi /GR /nologo /RTC1")
 		set(MSVC_LINK_FLAGS " /DEBUG /INCREMENTAL")
 	ELSE()
-		add_definitions(-D_WIN32)
-		add_definitions(-DHAVE_MYSQL_SSL_SET)
-		
+	  add_definitions(-DNDEBUG)
+	  
 		set(CMAKE_CXX_FLAGS " /Ox /EHsc /GL /GR /nologo")
 		set(MSVC_LINK_FLAGS " /RELEASE /LTCG /INCREMENTAL:NO /NOLOGO")
 	ENDIF()
@@ -134,6 +133,8 @@ lib/mysql++.h
 if (mysqlpp_STATIC_LIB)
 	add_library(mysqlpp STATIC ${SOURCES_BASE})
 else()
+  add_definitions(-DMYSQLPP_MAKING_DLL)
+  
 	#todo add a way to compile as shared lib
 	add_library(mysqlpp STATIC ${SOURCES_BASE})
 endif()
