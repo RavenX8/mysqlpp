@@ -25,13 +25,13 @@ project(${PROJECT})
 
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
-add_definitions(-D_USRDLL)
+#add_definitions(-D_USRDLL)
 add_definitions(-DHAVE_MYSQL_SSL_SET)
 
 IF (MSVC)
 	MESSAGE("Building for Visual Stuido")
 	add_definitions(-D_WIN32)
-	add_definitions(-DMYSQLPP_MAKING_DLL)
+	#add_definitions(-DMYSQLPP_MAKING_DLL)
 	
 	IF($(CMAKE_BUILD_TYPE) STREQUAL DEBUG)
 		add_definitions(-D_DEBUG)
@@ -132,6 +132,7 @@ lib/mysql++.h
 )
 
 if (mysqlpp_STATIC_LIB)
+  add_definitions(-DMYSQLPP_NO_DLL)
 	add_library(mysqlpp STATIC ${SOURCES_BASE})
 else()
   add_definitions(-DMYSQLPP_MAKING_DLL)
