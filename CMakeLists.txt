@@ -25,10 +25,18 @@ project(${PROJECT})
 
 SET(CMAKE_BUILD_TYPE $ENV{BUILD_TYPE})
 
-#add_definitions(-D_USRDLL)
-add_definitions(-DHAVE_MYSQL_SSL_SET)
+set(MYSQLPP_VERSION_MAJOR 3)
+set(MYSQLPP_VERSION_MINOR 2)
+set(MYSQLPP_VERSION_BUGFIX 3)
+
+configure_file(
+	lib/mysql++.h.in
+	${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
+)
 
 IF (MSVC)
+	add_definitions(-DHAVE_MYSQL_SSL_SET)
+	
 	MESSAGE("Building for Visual Stuido")
 	add_definitions(-D_WIN32)
 	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /LTCG /INCREMENTAL:NO /ignore:4075")
@@ -44,21 +52,12 @@ IF (MSVC)
 		set(CMAKE_CXX_FLAGS " /Ox /EHsc /GL /GR /nologo")
 		set(MSVC_LINK_FLAGS " /RELEASE /LTCG /INCREMENTAL:NO /NOLOGO")
 	ENDIF()
-ENDIF()
-
-set(MYSQLPP_VERSION_MAJOR 3)
-set(MYSQLPP_VERSION_MINOR 2)
-set(MYSQLPP_VERSION_BUGFIX 3)
-	
-configure_file(
-	lib/mysql++.h.in
-	${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
-)
-
+ELSE()
 configure_file(
 	config.h.in
 	${CMAKE_CURRENT_LIST_DIR}/lib/config.h
 )
+ENDIF()
 
 SET( SOURCES_BASE
 lib/beemutex.cpp
@@ -143,5 +142,5 @@ else()
   add_definitions(-DMYSQLPP_MAKING_DLL)
   
 	#todo add a way to compile as shared lib
-	add_library(mysqlpp STATIC ${SOURCES_BASE})
+	add_library(mysqlpp SHARED ${SOURCES_BASE})
 endif()
