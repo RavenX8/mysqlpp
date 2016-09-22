@@ -55,6 +55,11 @@ configure_file(
 	${CMAKE_CURRENT_LIST_DIR}/lib/mysql++.h
 )
 
+configure_file(
+	config.h.in
+	${CMAKE_CURRENT_LIST_DIR}/lib/config.h
+)
+
 SET( SOURCES_BASE
 lib/beemutex.cpp
 lib/cmdline.cpp
