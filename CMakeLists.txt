@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
-find_package(MySQL REQUIRED)
+#find_package(MySQL REQUIRED)
 
 INCLUDE_DIRECTORIES(
   SYSTEM ${MYSQL_INCLUDE_DIRS}
