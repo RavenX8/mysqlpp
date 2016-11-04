@@ -139,10 +139,15 @@ SET( SOURCES_BASE
 
 if (mysqlpp_STATIC_LIB)
   add_definitions(-DMYSQLPP_NO_DLL)
-  add_library(mysqlpp STATIC ${SOURCES_BASE})
+  add_library(${PROJECT} STATIC ${SOURCES_BASE})
 else()
   add_definitions(-DMYSQLPP_MAKING_DLL)
   
   #todo add a way to compile as shared lib
-  add_library(mysqlpp SHARED ${SOURCES_BASE})
+  add_library(${PROJECT} SHARED ${SOURCES_BASE})
 endif()
+
+target_include_directories(${PROJECT} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>)
+    
+target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARY})
