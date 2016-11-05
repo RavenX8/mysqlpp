@@ -150,4 +150,4 @@ endif()
 target_include_directories(${PROJECT} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>)
     
-target_link_libraries(${PROJECT} PRIVATE ${MYSQL_LIBRARY})
+target_link_libraries(${PROJECT} ${MYSQL_LIBRARY})
