@@ -40,6 +40,12 @@ do
 			export CXXFLAGS="-g -O2 -ansi -pedantic -Wall -Wextra -W -Wold-style-cast -Wfloat-equal -Wwrite-strings -Wno-overloaded-virtual -Wno-long-long -Wno-variadic-macros -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
 			shift
 			;;
+			
+		root)
+			export PATH="$PATH:$2"
+			export ROOTDIR="$2"
+			shift
+			;;
 
 		*)
 			ARGS=0
@@ -66,7 +72,8 @@ done
 
 # Find location of Bakefile's stock M4 autoconf macros
 for d in /usr/share/aclocal /usr/local/share/aclocal \
-	'/c/Program Files (x86)/Bakefile/autoconf'
+	'/c/Program Files (x86)/Bakefile/autoconf' \
+	$ROOTDIR
 do
 	BAKEFILE_M4="$d"
 	if [ -e "$BAKEFILE_M4/bakefile.m4" ] ; then break ; fi
